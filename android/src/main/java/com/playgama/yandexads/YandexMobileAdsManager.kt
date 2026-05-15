@@ -1,6 +1,6 @@
 package com.playgama.yandexads
 
-import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -25,7 +25,7 @@ import com.yandex.mobile.ads.rewarded.RewardedAdLoadListener
 import com.yandex.mobile.ads.rewarded.RewardedAdLoader
 
 class YandexMobileAdsManager(
-    private val activity: Activity,
+    private val activity: AppCompatActivity,
     private val plugin: YandexMobileAdsPlugin,
 ) {
     private val bannerViews = mutableMapOf<String, BannerAdView>()
