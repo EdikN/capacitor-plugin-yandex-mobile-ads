@@ -116,7 +116,6 @@ class YandexMobileAdsManager(
         activity.runOnUiThread {
             try {
                 val bannerAdView = BannerAdView(activity)
-                bannerAdView.adUnitId = adUnitId
                 bannerAdView.adSize = BannerAdSize.fixedSize(activity, 320, 50)
                 bannerAdView.setBannerAdEventListener(object : BannerAdEventListener {
                     override fun onAdLoaded() {
@@ -138,7 +137,7 @@ class YandexMobileAdsManager(
                     if (position == "top") Gravity.TOP else Gravity.BOTTOM,
                 )
                 rootView.addView(bannerAdView, params)
-                bannerAdView.loadAd(AdRequest.Builder().build())
+                bannerAdView.loadAd(adUnitId, AdRequest.Builder().build())
                 bannerViews[adUnitId] = bannerAdView
             } catch (e: Exception) {
                 callback(e.message)
