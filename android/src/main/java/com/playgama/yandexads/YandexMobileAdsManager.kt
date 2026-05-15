@@ -8,7 +8,9 @@ import com.getcapacitor.JSObject
 import com.yandex.mobile.ads.banner.BannerAdEventListener
 import com.yandex.mobile.ads.banner.BannerAdSize
 import com.yandex.mobile.ads.banner.BannerAdView
+import com.yandex.mobile.ads.common.AdError
 import com.yandex.mobile.ads.common.AdRequest
+import com.yandex.mobile.ads.common.AdRequestConfiguration
 import com.yandex.mobile.ads.common.AdRequestError
 import com.yandex.mobile.ads.common.ImpressionData
 import com.yandex.mobile.ads.common.MobileAds
@@ -41,9 +43,9 @@ class YandexMobileAdsManager(
                     override fun onAdShown() {
                         plugin.emit("interstitialOpened")
                     }
-                    override fun onAdFailedToShow(error: AdRequestError) {
-                        plugin.emit("interstitialFailed", JSObject().put("error", error.description))
-                        callback(error.description)
+                    override fun onAdFailedToShow(adError: AdError) {
+                        plugin.emit("interstitialFailed", JSObject().put("error", adError.description))
+                        callback(adError.description)
                     }
                     override fun onAdDismissed() {
                         plugin.emit("interstitialClosed")
@@ -60,7 +62,7 @@ class YandexMobileAdsManager(
                 callback(error.description)
             }
         })
-        loader.loadAd(com.yandex.mobile.ads.interstitial.InterstitialAdRequestConfiguration.Builder(adUnitId).build())
+        loader.loadAd(AdRequestConfiguration.Builder(adUnitId).build())
     }
 
     fun preloadInterstitial(adUnitId: String) {
@@ -69,7 +71,7 @@ class YandexMobileAdsManager(
             override fun onAdLoaded(ad: InterstitialAd) {}
             override fun onAdFailedToLoad(error: AdRequestError) {}
         })
-        loader.loadAd(com.yandex.mobile.ads.interstitial.InterstitialAdRequestConfiguration.Builder(adUnitId).build())
+        loader.loadAd(AdRequestConfiguration.Builder(adUnitId).build())
     }
 
     fun showRewarded(adUnitId: String, callback: (String?) -> Unit) {
@@ -80,9 +82,9 @@ class YandexMobileAdsManager(
                     override fun onAdShown() {
                         plugin.emit("rewardedOpened")
                     }
-                    override fun onAdFailedToShow(error: AdRequestError) {
-                        plugin.emit("rewardedFailed", JSObject().put("error", error.description))
-                        callback(error.description)
+                    override fun onAdFailedToShow(adError: AdError) {
+                        plugin.emit("rewardedFailed", JSObject().put("error", adError.description))
+                        callback(adError.description)
                     }
                     override fun onAdDismissed() {
                         plugin.emit("rewardedClosed")
@@ -102,7 +104,7 @@ class YandexMobileAdsManager(
                 callback(error.description)
             }
         })
-        loader.loadAd(com.yandex.mobile.ads.rewarded.RewardedAdRequestConfiguration.Builder(adUnitId).build())
+        loader.loadAd(AdRequestConfiguration.Builder(adUnitId).build())
     }
 
     fun preloadRewarded(adUnitId: String) {
@@ -111,7 +113,7 @@ class YandexMobileAdsManager(
             override fun onAdLoaded(ad: RewardedAd) {}
             override fun onAdFailedToLoad(error: AdRequestError) {}
         })
-        loader.loadAd(com.yandex.mobile.ads.rewarded.RewardedAdRequestConfiguration.Builder(adUnitId).build())
+        loader.loadAd(AdRequestConfiguration.Builder(adUnitId).build())
     }
 
     fun showBanner(adUnitId: String, position: String, callback: (String?) -> Unit) {
