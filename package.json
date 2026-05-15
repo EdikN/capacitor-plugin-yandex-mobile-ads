@@ -1,0 +1,44 @@
+{
+    "name": "capacitor-plugin-yandex-mobile-ads",
+    "version": "1.0.0",
+    "description": "Capacitor plugin for Yandex Mobile Ads SDK (Android)",
+    "main": "dist/plugin.cjs.js",
+    "module": "dist/esm/index.js",
+    "types": "dist/esm/index.d.ts",
+    "unpkg": "dist/plugin.js",
+    "files": [
+        "android/",
+        "dist/",
+        "ios/"
+    ],
+    "scripts": {
+        "build": "npm run clean && tsc && rollup -c rollup.config.js",
+        "clean": "rimraf dist/",
+        "watch": "tsc --watch",
+        "prepublishOnly": "npm run build"
+    },
+    "keywords": [
+        "capacitor",
+        "plugin",
+        "yandex",
+        "mobile-ads",
+        "android"
+    ],
+    "author": "Playgama",
+    "license": "LGPL-3.0-or-later",
+    "devDependencies": {
+        "@capacitor/android": "^6.0.0",
+        "@capacitor/core": "^6.0.0",
+        "rimraf": "^5.0.0",
+        "rollup": "^3.0.0",
+        "typescript": "^5.0.0"
+    },
+    "peerDependencies": {
+        "@capacitor/core": "^6.0.0"
+    },
+    "capacitor": {
+        "android": {
+            "src": "android"
+        }
+    }
+}
