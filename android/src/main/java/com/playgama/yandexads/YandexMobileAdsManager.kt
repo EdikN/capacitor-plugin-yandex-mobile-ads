@@ -13,10 +13,9 @@ import com.yandex.mobile.ads.banner.BannerAdSize
 import com.yandex.mobile.ads.banner.BannerAdView
 import com.yandex.mobile.ads.common.AdError
 import com.yandex.mobile.ads.common.AdRequest
-import com.yandex.mobile.ads.common.AdRequestConfiguration
 import com.yandex.mobile.ads.common.AdRequestError
 import com.yandex.mobile.ads.common.ImpressionData
-import com.yandex.mobile.ads.common.MobileAds
+import com.yandex.mobile.ads.common.YandexAds
 import com.yandex.mobile.ads.interstitial.InterstitialAd
 import com.yandex.mobile.ads.interstitial.InterstitialAdEventListener
 import com.yandex.mobile.ads.interstitial.InterstitialAdLoadListener
@@ -48,12 +47,12 @@ class YandexMobileAdsManager(
                 // Analytics must never be the reason a game fails to start.
             }
         }
-        MobileAds.initialize(activity) {}
+        YandexAds.initialize(activity) {}
     }
 
     fun showInterstitial(adUnitId: String, callback: (String?) -> Unit) {
         val loader = InterstitialAdLoader(activity)
-        loader.setAdLoadListener(object : InterstitialAdLoadListener {
+        loader.loadAd(AdRequest.Builder(adUnitId).build(), object : InterstitialAdLoadListener {
             override fun onAdLoaded(ad: InterstitialAd) {
                 ad.setAdEventListener(object : InterstitialAdEventListener {
                     override fun onAdShown() { plugin.emit("interstitialOpened") }
@@ -76,21 +75,19 @@ class YandexMobileAdsManager(
                 callback(error.description)
             }
         })
-        loader.loadAd(AdRequestConfiguration.Builder(adUnitId).build())
     }
 
     fun preloadInterstitial(adUnitId: String) {
         val loader = InterstitialAdLoader(activity)
-        loader.setAdLoadListener(object : InterstitialAdLoadListener {
+        loader.loadAd(AdRequest.Builder(adUnitId).build(), object : InterstitialAdLoadListener {
             override fun onAdLoaded(ad: InterstitialAd) {}
             override fun onAdFailedToLoad(error: AdRequestError) {}
         })
-        loader.loadAd(AdRequestConfiguration.Builder(adUnitId).build())
     }
 
     fun showRewarded(adUnitId: String, callback: (String?) -> Unit) {
         val loader = RewardedAdLoader(activity)
-        loader.setAdLoadListener(object : RewardedAdLoadListener {
+        loader.loadAd(AdRequest.Builder(adUnitId).build(), object : RewardedAdLoadListener {
             override fun onAdLoaded(ad: RewardedAd) {
                 ad.setAdEventListener(object : RewardedAdEventListener {
                     override fun onAdShown() { plugin.emit("rewardedOpened") }
@@ -116,16 +113,14 @@ class YandexMobileAdsManager(
                 callback(error.description)
             }
         })
-        loader.loadAd(AdRequestConfiguration.Builder(adUnitId).build())
     }
 
     fun preloadRewarded(adUnitId: String) {
         val loader = RewardedAdLoader(activity)
-        loader.setAdLoadListener(object : RewardedAdLoadListener {
+        loader.loadAd(AdRequest.Builder(adUnitId).build(), object : RewardedAdLoadListener {
             override fun onAdLoaded(ad: RewardedAd) {}
             override fun onAdFailedToLoad(error: AdRequestError) {}
         })
-        loader.loadAd(AdRequestConfiguration.Builder(adUnitId).build())
     }
 
     fun showBanner(adUnitId: String, position: String, callback: (String?) -> Unit) {
@@ -157,8 +152,7 @@ class YandexMobileAdsManager(
                 // keeps whatever is left over reading as part of the frame
                 // rather than as a grey seam.
                 bannerAdView.setBackgroundColor(android.graphics.Color.BLACK)
-                bannerAdView.setAdUnitId(adUnitId)
-                bannerAdView.setAdSize(BannerAdSize.stickySize(activity, widthDp))
+                bannerAdView.setAdSize(BannerAdSize.sticky(activity, widthDp))
                 bannerAdView.setBannerAdEventListener(object : BannerAdEventListener {
                     override fun onAdLoaded() {
                         plugin.emit("bannerShown")
@@ -173,8 +167,6 @@ class YandexMobileAdsManager(
                         callback(error.description)
                     }
                     override fun onAdClicked() {}
-                    override fun onLeftApplication() {}
-                    override fun onReturnedToApplication() {}
                     override fun onImpression(data: ImpressionData?) {}
                 })
 
@@ -185,7 +177,9 @@ class YandexMobileAdsManager(
                     gravity,
                 )
                 rootView.addView(bannerAdView, params)
-                bannerAdView.loadAd(AdRequest.Builder().build())
+                // Since SDK 8 the ad unit travels in the request rather than on
+                // the view — setAdUnitId no longer exists.
+                bannerAdView.loadAd(AdRequest.Builder(adUnitId).build())
                 bannerViews[adUnitId] = bannerAdView
             } catch (e: Exception) {
                 callback(e.message)
