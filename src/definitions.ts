@@ -16,6 +16,24 @@ export interface RewardData {
     amount: number
 }
 
+export interface NotificationOptions {
+    id: string
+    title: string
+    description: string
+    delaySeconds?: number
+    image?: string
+    payload?: string
+    smallIcon?: string
+    color?: string
+    channelId?: string
+    channelName?: string
+}
+
+export interface LaunchNotification {
+    id?: string
+    payload?: string
+}
+
 export interface PluginListenerHandle {
     remove(): Promise<void>
 }
@@ -28,6 +46,11 @@ export interface YandexMobileAdsPlugin {
     preloadRewarded(options: AdOptions): Promise<void>
     showBanner(options: BannerOptions): Promise<void>
     hideBanner(options: AdOptions): Promise<void>
+    scheduleNotification(options: NotificationOptions): Promise<void>
+    cancelNotification(options: { id: string }): Promise<void>
+    cancelAllNotifications(): Promise<void>
+    requestNotificationPermission(): Promise<{ granted: boolean }>
+    getLaunchNotification(): Promise<LaunchNotification>
     addListener(
         eventName:
             | 'interstitialOpened'
@@ -39,7 +62,8 @@ export interface YandexMobileAdsPlugin {
             | 'userEarned'
             | 'bannerShown'
             | 'bannerHidden'
-            | 'bannerFailed',
+            | 'bannerFailed'
+            | 'notificationOpened',
         listenerFunc: (data?: any) => void,
     ): Promise<PluginListenerHandle>
 }
