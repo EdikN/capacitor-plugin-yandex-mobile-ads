@@ -16,6 +16,15 @@ export interface RewardData {
     amount: number
 }
 
+export interface ReportEventOptions {
+    name: string
+    params?: Record<string, unknown>
+}
+
+export interface ReportUserProfileOptions {
+    attributes: Record<string, string | number | boolean | null>
+}
+
 export interface PluginListenerHandle {
     remove(): Promise<void>
 }
@@ -28,6 +37,9 @@ export interface YandexMobileAdsPlugin {
     preloadRewarded(options: AdOptions): Promise<void>
     showBanner(options: BannerOptions): Promise<void>
     hideBanner(options: AdOptions): Promise<void>
+    reportEvent(options: ReportEventOptions): Promise<void>
+    reportUserProfile(options: ReportUserProfileOptions): Promise<void>
+    sendEventsBuffer(): Promise<void>
     addListener(
         eventName:
             | 'interstitialOpened'
@@ -39,7 +51,10 @@ export interface YandexMobileAdsPlugin {
             | 'userEarned'
             | 'bannerShown'
             | 'bannerHidden'
-            | 'bannerFailed',
+            | 'bannerFailed'
+            | 'appPaused'
+            | 'appResumed'
+            | 'notificationOpened',
         listenerFunc: (data?: any) => void,
     ): Promise<PluginListenerHandle>
 }

@@ -4,6 +4,8 @@ import type {
     InitializeOptions,
     AdOptions,
     BannerOptions,
+    ReportEventOptions,
+    ReportUserProfileOptions,
     PluginListenerHandle,
 } from './definitions'
 
@@ -35,6 +37,12 @@ export class YandexMobileAdsWeb extends WebPlugin implements YandexMobileAdsPlug
     async hideBanner(_options: AdOptions): Promise<void> {
         console.warn('YandexMobileAds: web platform is not supported')
     }
+
+    async reportEvent(_options: ReportEventOptions): Promise<void> {}
+
+    async reportUserProfile(_options: ReportUserProfileOptions): Promise<void> {}
+
+    async sendEventsBuffer(): Promise<void> {}
 
     async addListener(_eventName: string, _listenerFunc: (data?: any) => void): Promise<PluginListenerHandle> {
         return { remove: async () => {} }
