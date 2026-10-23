@@ -2,12 +2,25 @@ export interface InitializeOptions {
     appMetricaKey?: string
 }
 
+// Which formats have an ad unit compiled into the app (android/yandex-ads.properties).
+// The ids themselves are never returned.
+export interface InitializeResult {
+    adUnits: {
+        interstitial: boolean
+        rewarded: boolean
+        banner: boolean
+    }
+    appMetrica: boolean
+}
+
+// adUnitId is optional: without it the id compiled into the app is used, and
+// when both exist the compiled one wins.
 export interface AdOptions {
-    adUnitId: string
+    adUnitId?: string
 }
 
 export interface BannerOptions {
-    adUnitId: string
+    adUnitId?: string
     position: 'top' | 'bottom'
 }
 
@@ -16,22 +29,13 @@ export interface RewardData {
     amount: number
 }
 
-export interface NotificationOptions {
-    id: string
-    title: string
-    description: string
-    delaySeconds?: number
-    image?: string
-    payload?: string
-    smallIcon?: string
-    color?: string
-    channelId?: string
-    channelName?: string
+export interface ReportEventOptions {
+    name: string
+    params?: Record<string, unknown>
 }
 
-export interface LaunchNotification {
-    id?: string
-    payload?: string
+export interface ReportUserProfileOptions {
+    attributes: Record<string, string | number | boolean | null>
 }
 
 export interface PluginListenerHandle {
@@ -39,18 +43,16 @@ export interface PluginListenerHandle {
 }
 
 export interface YandexMobileAdsPlugin {
-    initialize(options: InitializeOptions): Promise<void>
+    initialize(options: InitializeOptions): Promise<InitializeResult>
     showInterstitial(options: AdOptions): Promise<void>
     preloadInterstitial(options: AdOptions): Promise<void>
     showRewarded(options: AdOptions): Promise<void>
     preloadRewarded(options: AdOptions): Promise<void>
     showBanner(options: BannerOptions): Promise<void>
     hideBanner(options: AdOptions): Promise<void>
-    scheduleNotification(options: NotificationOptions): Promise<void>
-    cancelNotification(options: { id: string }): Promise<void>
-    cancelAllNotifications(): Promise<void>
-    requestNotificationPermission(): Promise<{ granted: boolean }>
-    getLaunchNotification(): Promise<LaunchNotification>
+    reportEvent(options: ReportEventOptions): Promise<void>
+    reportUserProfile(options: ReportUserProfileOptions): Promise<void>
+    sendEventsBuffer(): Promise<void>
     addListener(
         eventName:
             | 'interstitialOpened'
@@ -63,6 +65,8 @@ export interface YandexMobileAdsPlugin {
             | 'bannerShown'
             | 'bannerHidden'
             | 'bannerFailed'
+            | 'appPaused'
+            | 'appResumed'
             | 'notificationOpened',
         listenerFunc: (data?: any) => void,
     ): Promise<PluginListenerHandle>

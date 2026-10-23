@@ -19,6 +19,7 @@ android {
     defaultConfig {
         minSdk 23
         targetSdk 36
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     buildTypes {
@@ -38,6 +39,10 @@ android {
     }
 }
 
+// Ad unit ids and the AppMetrica key from the app's yandex-ads.properties,
+// baked in as an obfuscated resource — see the file for why.
+apply from: 'yandex-ads-config.gradle'
+
 repositories {
     google()
     mavenCentral()
@@ -46,6 +51,6 @@ repositories {
 dependencies {
     implementation project(':capacitor-android')
     implementation 'androidx.appcompat:appcompat:1.7.0'
-    implementation 'com.yandex.android:mobileads:8.3.0'
-    implementation 'io.appmetrica.analytics:analytics:7.14.3'
+    implementation 'com.yandex.android:mobileads:8.6.0'
+    implementation 'io.appmetrica.analytics:analytics:8.6.0'
 }

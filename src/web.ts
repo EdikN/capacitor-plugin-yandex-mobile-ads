@@ -2,16 +2,18 @@ import { WebPlugin } from '@capacitor/core'
 import type {
     YandexMobileAdsPlugin,
     InitializeOptions,
+    InitializeResult,
     AdOptions,
     BannerOptions,
+    ReportEventOptions,
+    ReportUserProfileOptions,
     PluginListenerHandle,
-    NotificationOptions,
-    LaunchNotification,
 } from './definitions'
 
 export class YandexMobileAdsWeb extends WebPlugin implements YandexMobileAdsPlugin {
-    async initialize(_options: InitializeOptions): Promise<void> {
+    async initialize(_options: InitializeOptions): Promise<InitializeResult> {
         console.warn('YandexMobileAds: web platform is not supported')
+        return { adUnits: { interstitial: false, rewarded: false, banner: false }, appMetrica: false }
     }
 
     async showInterstitial(_options: AdOptions): Promise<void> {
@@ -38,21 +40,11 @@ export class YandexMobileAdsWeb extends WebPlugin implements YandexMobileAdsPlug
         console.warn('YandexMobileAds: web platform is not supported')
     }
 
-    async scheduleNotification(_options: NotificationOptions): Promise<void> {
-        console.warn('YandexMobileAds: web platform is not supported')
-    }
+    async reportEvent(_options: ReportEventOptions): Promise<void> {}
 
-    async cancelNotification(_options: { id: string }): Promise<void> {}
+    async reportUserProfile(_options: ReportUserProfileOptions): Promise<void> {}
 
-    async cancelAllNotifications(): Promise<void> {}
-
-    async requestNotificationPermission(): Promise<{ granted: boolean }> {
-        return { granted: false }
-    }
-
-    async getLaunchNotification(): Promise<LaunchNotification> {
-        return {}
-    }
+    async sendEventsBuffer(): Promise<void> {}
 
     async addListener(_eventName: string, _listenerFunc: (data?: any) => void): Promise<PluginListenerHandle> {
         return { remove: async () => {} }
