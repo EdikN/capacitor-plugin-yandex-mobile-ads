@@ -39,6 +39,10 @@ android {
     }
 }
 
+// Ad unit ids and the AppMetrica key from the app's yandex-ads.properties,
+// baked in as an obfuscated resource — see the file for why.
+apply from: 'yandex-ads-config.gradle'
+
 repositories {
     google()
     mavenCentral()

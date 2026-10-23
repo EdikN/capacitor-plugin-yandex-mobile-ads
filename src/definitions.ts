@@ -2,12 +2,25 @@ export interface InitializeOptions {
     appMetricaKey?: string
 }
 
+// Which formats have an ad unit compiled into the app (android/yandex-ads.properties).
+// The ids themselves are never returned.
+export interface InitializeResult {
+    adUnits: {
+        interstitial: boolean
+        rewarded: boolean
+        banner: boolean
+    }
+    appMetrica: boolean
+}
+
+// adUnitId is optional: without it the id compiled into the app is used, and
+// when both exist the compiled one wins.
 export interface AdOptions {
-    adUnitId: string
+    adUnitId?: string
 }
 
 export interface BannerOptions {
-    adUnitId: string
+    adUnitId?: string
     position: 'top' | 'bottom'
 }
 
@@ -30,7 +43,7 @@ export interface PluginListenerHandle {
 }
 
 export interface YandexMobileAdsPlugin {
-    initialize(options: InitializeOptions): Promise<void>
+    initialize(options: InitializeOptions): Promise<InitializeResult>
     showInterstitial(options: AdOptions): Promise<void>
     preloadInterstitial(options: AdOptions): Promise<void>
     showRewarded(options: AdOptions): Promise<void>

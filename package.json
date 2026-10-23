@@ -1,6 +1,6 @@
 {
     "name": "capacitor-plugin-yandex-mobile-ads",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "description": "Capacitor plugin for Yandex Mobile Ads SDK (Android)",
     "main": "dist/plugin.cjs.js",
     "module": "dist/esm/index.js",

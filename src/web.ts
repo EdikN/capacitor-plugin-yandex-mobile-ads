@@ -2,6 +2,7 @@ import { WebPlugin } from '@capacitor/core'
 import type {
     YandexMobileAdsPlugin,
     InitializeOptions,
+    InitializeResult,
     AdOptions,
     BannerOptions,
     ReportEventOptions,
@@ -10,8 +11,9 @@ import type {
 } from './definitions'
 
 export class YandexMobileAdsWeb extends WebPlugin implements YandexMobileAdsPlugin {
-    async initialize(_options: InitializeOptions): Promise<void> {
+    async initialize(_options: InitializeOptions): Promise<InitializeResult> {
         console.warn('YandexMobileAds: web platform is not supported')
+        return { adUnits: { interstitial: false, rewarded: false, banner: false }, appMetrica: false }
     }
 
     async showInterstitial(_options: AdOptions): Promise<void> {
